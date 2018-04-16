@@ -24,7 +24,7 @@ def calcIK():
 
     ForwardPos = Kin.Arm_F_Pos_Kin(dh_param,Hx,Hy)
 
-    InvPos = Kin.Arm_Inv_Pos_Kin(ForwardPos, Hx,Hy)
+    InvPos = Kin.Arm_Inv_Pos_Kin(ForwardPos,Hx,Hy)
     t1 = InvPos[0]
     t2 = InvPos[1]
 
