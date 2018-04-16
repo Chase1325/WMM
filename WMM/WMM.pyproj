@@ -1,0 +1,53 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>05945ac9-1ca0-4334-bedf-0ee00c08c842</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>WMM.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>WMM</Name>
+    <RootNamespace>WMM</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Controllers.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Kinematics.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PullOpen.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PushOpen.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Push_Home_Arm_Calc.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Push_Home_Hybrid_Calc.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WMM.py" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
