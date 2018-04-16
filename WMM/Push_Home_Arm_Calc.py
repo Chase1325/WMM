@@ -1,10 +1,15 @@
 import math as m
-import sympy as S
+#import sympy as S
 import numpy as n
 import Kinematics as Kin
 import Controllers as C
+import time
+import rospy
+from std_msgs.msg import Float32
 
-
+# Creating a ROS node to publish PWM signals to an Arduino subscriber
+#pwmPublisher = rospy.Publisher('pwm', Float32)
+#rospy.init_node('pwmNode', anonymous=True)
 
 dh_param = [[1, 5, 5, 1,], # Link 0
             [3, 4, 3, 2,], # Link 1
@@ -49,6 +54,14 @@ def home2Handle_Control(t1_f,t2_f):
 
 
 def rotateEE():
+   
+    # Creating a ROS node to publish PWM signals to an Arduino subscriber
+    pwmPublisher = rospy.Publisher('pwm', Float32, queue_size=1)
+    rospy.init_node('pwmNode', anonymous=True)
+    secs = 3
+    print "Waiting", secs,"seconds..."
+    time.sleep(secs)   
+ 
     print('Control EE to open handle')
     tX = 0 #Degrees
     tF = 100 #Degrees
@@ -81,7 +94,9 @@ def rotateEE():
         print("Error: " + str(error) + " Signal: " + str(signal))
 
         #send this to PWM converted representation via Arduino
+        pwmPublisher.publish(signal)
 
+        
     nudge = False
     while (nudge == False):
 
@@ -119,9 +134,11 @@ def rotateEE():
 
         print("Error: " + str(e2) + " Signal: " + str(signal))
         #send this to PWM converted representation via Arduino
+        pwmPublisher.publish(signal)
 
 
-
+    while True:
+        continue
 
 
 
