@@ -28,6 +28,7 @@ std_msgs::Float32 float_msg2;
 // ROS Publishers
 ros::Publisher joint1_theta("joint1_theta", &float_msg1);
 ros::Publisher joint2_theta("joint2_theta", &float_msg2);
+ros::Publisher testing("testing", &float_msg2);
 
 
 // Callback function when receivng a rostopic for theta1
@@ -35,8 +36,10 @@ ros::Publisher joint2_theta("joint2_theta", &float_msg2);
 void pwmCallback1(const std_msgs::Float32& msg) {
   float pwm = msg.data;
   //pwmWrite(pwmPin1, dirPin1, pwm);
-  Serial.print("Received: ");
-  Serial.println(pwm);
+  //Serial.print("Received: ");
+  //Serial.println(pwm);
+  testing.publish(&msg);
+  //delay(100);
 }
 
 // Callback function when receivng a rostopic for theta1
@@ -84,15 +87,17 @@ void pwmWrite(int motorPWM, int motorDIR, float pwm) {
   else {
     digitalWrite(motorDIR, LOW);
   }
-  analogWrite(motorPin, pwm);
+  analogWrite(motorPWM, pwm);
   delay(500);
 }
 
 
 void setup() {
+  Serial.begin(9600);
   nh.initNode();
   nh.advertise(joint1_theta);
   nh.advertise(joint2_theta);
+  nh.advertise(testing);
   nh.subscribe(pwm);
   //nh.subscribe(pwm_signal2);
 }
@@ -106,10 +111,11 @@ void loop() {
   float angle1 = getPotAngle(potPin1);
   float_msg1.data = angle1;
   joint1_theta.publish( &float_msg1 );
+  Serial.println("Hi");
   
   /*float angle2 = getPotAngle(potPin2);
   float_msg2.data = angle2;
   joint2_theta.publish( &float_msg2 );*/
   nh.spinOnce();
-  delay(500);
+  //delay(100);
 }

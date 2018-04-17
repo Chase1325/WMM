@@ -1,5 +1,5 @@
 import numpy as n
-import sympy as s
+#import sympy as s
 import math as m
 
 def dhparam2matrix(dh_param_i, qi):

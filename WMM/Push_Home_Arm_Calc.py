@@ -7,9 +7,6 @@ import time
 #import rospy
 #from std_msgs.msg import Float32
 
-# Creating a ROS node to publish PWM signals to an Arduino subscriber
-#pwmPublisher = rospy.Publisher('pwm', Float32)
-#rospy.init_node('pwmNode', anonymous=True)
 
 L1 = 0.50973
 L2 = 0.44786
@@ -101,6 +98,7 @@ def rotateEE():
 
         #send this to PWM converted representation via Arduino
         pwmPublisher.publish(signal)
+        time.sleep(0.1)
 
         
     nudge = False
@@ -141,6 +139,7 @@ def rotateEE():
         print("Error: " + str(e2) + " Signal: " + str(signal))
         #send this to PWM converted representation via Arduino
         pwmPublisher.publish(signal)
+        time.sleep(0.1)
 
 
     while True:
