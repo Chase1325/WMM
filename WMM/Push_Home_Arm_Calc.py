@@ -1,41 +1,49 @@
 import math as m
-#import sympy as S
+import sympy as S
 import numpy as n
 import Kinematics as Kin
 import Controllers as C
 import time
-import rospy
-from std_msgs.msg import Float32
+#import rospy
+#from std_msgs.msg import Float32
 
 # Creating a ROS node to publish PWM signals to an Arduino subscriber
 #pwmPublisher = rospy.Publisher('pwm', Float32)
 #rospy.init_node('pwmNode', anonymous=True)
 
-dh_param = [[1, 5, 5, 1,], # Link 0
-            [3, 4, 3, 2,], # Link 1
-            [9, 1, 3, 1]]  # Link 2
+L1 = 0.50973
+L2 = 0.44786
+height = 0 #Distance from Wheel base to Plane of arm
+q1 = -(m.pi)/2
+q2 = (m.pi)/2
+
+t1,t2 = S.symbols('t1 t2')
 
 
+#DH Paremeters: [theta, d, a, alpha]
+dh_param = [[0, height, 0, 0], # Link 0
+            [L1, 0, 0, q1], # Link 1
+            [L2, 0, 0, q2]]  # Link 2
 
 def calcIK():
     t1=0
     t2=0
-    Hx = 0
-    Hy = 0
+    Hx = L1        #Distance in X to door handle
+    Hy = L2      #Distance in Y to door handle
+    
+    ForwardPos = Kin.RZ(q1)*Kin.trans(0,L1,0)*Kin.RZ(q2)*Kin.trans(0,L2,0)
+    print(ForwardPos)
 
-    #Calculate Joint 1 and 2 angles using:
-        #EEx, EEy, Hx, Hy
-        #
+    #Need to then Multiply by Translational matricies for EE to Door Handle
+    InvPos = Kin.Arm_Inv_Pos_Kin2(ForwardPos,Hx,Hy,L1,L2)
+    t1 = n.degrees(InvPos[0])
+    t2 = n.degrees(InvPos[1])
 
-    ForwardPos = Kin.Arm_F_Pos_Kin(dh_param,Hx,Hy)
-
-    InvPos = Kin.Arm_Inv_Pos_Kin(ForwardPos,Hx,Hy)
-    t1 = InvPos[0]
-    t2 = InvPos[1]
-
+    ForwardPos2=Kin.RZ(InvPos[0])*Kin.trans(L1,0,0)*Kin.RZ(InvPos[1])*Kin.trans(L2,0,0)
+    print("TEST",ForwardPos2)
     J = Kin.Arm_Jacobian(dh_param,t1,t2)
-    print(J)
-    #Kin.Arm_Inv_Vel_Kin(J,5,5)
+    print(ForwardPos)
+    print(t1,t2)
     print('Calculated IK')
     return t1,t2
 
@@ -45,8 +53,6 @@ def home2Handle_Control(t1_f,t2_f):
 
     t1_i = -90 #deg
     t2_i = 90 #deg
-
-    
 
     e1 = t1_f-t1_i
     e2 = t2_f-t2_i
@@ -59,7 +65,7 @@ def rotateEE():
     pwmPublisher = rospy.Publisher('pwm', Float32, queue_size=1)
     rospy.init_node('pwmNode', anonymous=True)
     secs = 3
-    print "Waiting", secs,"seconds..."
+    print ("Waiting", secs,"seconds...")
     time.sleep(secs)   
  
     print('Control EE to open handle')
