@@ -44,16 +44,79 @@ def calcIK():
     print('Calculated IK')
     return t1,t2
 
-
+#Pass in the required joint angles from inverse kinematics
 def home2Handle_Control(t1_f,t2_f):
     print('Drive Arm to needed position')
 
     t1_i = -90 #deg
     t2_i = 90 #deg
+    e1 = abs(t1_f-t1_i)
+    e2 = abs(t2_f-t2_i)
+    #error = n.transpose([e1,e2])
 
-    e1 = t1_f-t1_i
-    e2 = t2_f-t2_i
-    error = n.transpose([e1,e2])
+    #Joint Control independently for now:
+
+    #Tune for each joint
+    P = 5
+    I = 0
+    D = 15
+
+    eTot=0
+    eOld=e1
+
+    tX_new = 0
+    while (e1>=1):
+
+        #tX = measured angle
+
+        Calc_PID = C.PID_EE(P,I,D,t1_f,tX_new,eTot,eOld)
+        #Returns eTot, eNew, signal, and tX
+        
+        eOld = Calc_PID[1]
+        eTot = Calc_PID[0]
+
+        signal = Calc_PID[2]
+
+        tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
+        error = abs(t1_f-tX_new)
+
+        print("Error: " + str(error) + " Signal: " + str(signal))
+
+        #send this to PWM converted representation via Arduino
+        pwmPublisher.publish(signal)
+        time.sleep(0.1)
+
+    P = 5
+    I = 0
+    D = 15
+
+    eTot=0
+    eOld=e2
+
+    tX_new = 0
+    while (e2>=1):
+
+        #tX = measured angle
+
+        Calc_PID = C.PID_EE(P,I,D,t2_f,tX_new,eTot,eOld)
+        #Returns eTot, eNew, signal, and tX
+        
+        eOld = Calc_PID[1]
+        eTot = Calc_PID[0]
+
+        signal = Calc_PID[2]
+
+        tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
+        error = abs(t2_f-tX_new)
+
+        print("Error: " + str(error) + " Signal: " + str(signal))
+
+        #send this to PWM converted representation via Arduino
+        pwmPublisher.publish(signal)
+        time.sleep(0.1)
+
+
+
 
 
 def rotateEE():
