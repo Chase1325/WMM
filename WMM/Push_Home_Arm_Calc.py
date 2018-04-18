@@ -48,6 +48,13 @@ def calcIK():
 def home2Handle_Control(t1_f,t2_f):
     print('Drive Arm to needed position')
 
+    pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
+    pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
+    rospy.init_node('pwmNode', anonymous=True)
+    secs = 3
+    print ("Waiting", secs,"seconds...")
+    time.sleep(secs) 
+
     t1_i = -90 #deg
     t2_i = 90 #deg
     e1 = abs(t1_f-t1_i)
@@ -75,15 +82,15 @@ def home2Handle_Control(t1_f,t2_f):
         eOld = Calc_PID[1]
         eTot = Calc_PID[0]
 
-        signal = Calc_PID[2]
+        signal_j1 = Calc_PID[2]
 
         tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
         error = abs(t1_f-tX_new)
 
-        print("Error: " + str(error) + " Signal: " + str(signal))
+        print("Error: " + str(error) + " Signal: " + str(signal_j1))
 
         #send this to PWM converted representation via Arduino
-        pwmPublisher.publish(signal)
+        pwmPublisher1.publish(signal_j1)
         time.sleep(0.1)
 
     P = 5
@@ -104,15 +111,15 @@ def home2Handle_Control(t1_f,t2_f):
         eOld = Calc_PID[1]
         eTot = Calc_PID[0]
 
-        signal = Calc_PID[2]
+        signal_j2 = Calc_PID[2]
 
         tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
         error = abs(t2_f-tX_new)
 
-        print("Error: " + str(error) + " Signal: " + str(signal))
+        print("Error: " + str(error) + " Signal: " + str(signal_j2))
 
         #send this to PWM converted representation via Arduino
-        pwmPublisher.publish(signal)
+        pwmPublisher2.publish(signal_j2)
         time.sleep(0.1)
 
 
@@ -122,8 +129,8 @@ def home2Handle_Control(t1_f,t2_f):
 def rotateEE():
    
     # Creating a ROS node to publish PWM signals to an Arduino subscriber
-    pwmPublisher = rospy.Publisher('pwm', Float32, queue_size=1)
-    rospy.init_node('pwmNode', anonymous=True)
+    pwmPublisher3 = rospy.Publisher('pwm3', Float32, queue_size=1)
+    #rospy.init_node('pwmNode', anonymous=True)
     secs = 3
     print ("Waiting", secs,"seconds...")
     time.sleep(secs)   
@@ -152,15 +159,15 @@ def rotateEE():
         eOld = Calc_PID[1]
         eTot = Calc_PID[0]
 
-        signal = Calc_PID[2]
+        signal_j3 = Calc_PID[2]
 
         tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
         error = abs(tF-tX_new)
 
-        print("Error: " + str(error) + " Signal: " + str(signal))
+        print("Error: " + str(error) + " Signal: " + str(signal_j3))
 
         #send this to PWM converted representation via Arduino
-        pwmPublisher.publish(signal)
+        pwmPublisher3.publish(signal_j3)
         time.sleep(0.1)
 
         
