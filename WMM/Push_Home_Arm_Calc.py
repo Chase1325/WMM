@@ -1,5 +1,5 @@
 import math as m
-import sympy as S
+#import sympy as S
 import numpy as n
 import Kinematics as Kin
 import Controllers as C
@@ -14,7 +14,7 @@ height = 0 #Distance from Wheel base to Plane of arm
 q1 = -(m.pi)/2
 q2 = (m.pi)/2
 
-t1,t2 = S.symbols('t1 t2')
+#t1,t2 = S.symbols('t1 t2')
 
 
 #DH Paremeters: [theta, d, a, alpha]
@@ -48,25 +48,25 @@ def calcIK():
 def home2Handle_Control(t1_f,t2_f):
     print('Drive Arm to needed position')
 
-    pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
-    pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
-    rospy.init_node('pwmNode', anonymous=True)
-    secs = 3
-    print ("Waiting", secs,"seconds...")
-    time.sleep(secs) 
-
-    t1_i = -90 #deg
+    #pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
+    #pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
+    #rospy.init_node('pwmNode', anonymous=True)
+    #secs = 3
+    #print ("Waiting", secs,"seconds...")
+    #time.sleep(secs) 
+    t1_f = -90
+    t1_i = 0 #deg
     t2_i = 90 #deg
-    e1 = abs(t1_f-t1_i)
+    e1 = abs(t1_f)-t1_i
     e2 = abs(t2_f-t2_i)
     #error = n.transpose([e1,e2])
 
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 5
+    P = 1
     I = 0
-    D = 15
+    D = 5
 
     eTot=0
     eOld=e1
@@ -84,13 +84,14 @@ def home2Handle_Control(t1_f,t2_f):
 
         signal_j1 = Calc_PID[2]
 
-        tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
-        error = abs(t1_f-tX_new)
+        tX_new = Calc_PID[3]  + signal_j1/1000 #TEMPORARY FOR TESTING
+        error = abs(t1_f+tX_new)
+        e1 = error
 
         print("Error: " + str(error) + " Signal: " + str(signal_j1))
 
         #send this to PWM converted representation via Arduino
-        pwmPublisher1.publish(signal_j1)
+        #pwmPublisher1.publish(signal_j1)
         time.sleep(0.1)
 
     P = 5
@@ -113,14 +114,14 @@ def home2Handle_Control(t1_f,t2_f):
 
         signal_j2 = Calc_PID[2]
 
-        tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
+        tX_new = Calc_PID[3] - signal_j2/1000 #TEMPORARY FOR TESTING
         error = abs(t2_f-tX_new)
-
+        e2 = error
         print("Error: " + str(error) + " Signal: " + str(signal_j2))
 
         #send this to PWM converted representation via Arduino
-        pwmPublisher2.publish(signal_j2)
-        time.sleep(0.1)
+        #pwmPublisher2.publish(signal_j2)
+        #time.sleep(0.1)
 
 
 
@@ -129,11 +130,11 @@ def home2Handle_Control(t1_f,t2_f):
 def rotateEE():
    
     # Creating a ROS node to publish PWM signals to an Arduino subscriber
-    pwmPublisher3 = rospy.Publisher('pwm3', Float32, queue_size=1)
+    #pwmPublisher3 = rospy.Publisher('pwm3', Float32, queue_size=1)
     #rospy.init_node('pwmNode', anonymous=True)
-    secs = 3
-    print ("Waiting", secs,"seconds...")
-    time.sleep(secs)   
+    #secs = 3
+    #print ("Waiting", secs,"seconds...")
+    #time.sleep(secs)   
  
     print('Control EE to open handle')
     tX = 0 #Degrees
@@ -161,14 +162,14 @@ def rotateEE():
 
         signal_j3 = Calc_PID[2]
 
-        tX_new = Calc_PID[3] + signal/1000 #TEMPORARY FOR TESTING
+        tX_new = Calc_PID[3] + signal_j3/1000 #TEMPORARY FOR TESTING
         error = abs(tF-tX_new)
 
         print("Error: " + str(error) + " Signal: " + str(signal_j3))
 
         #send this to PWM converted representation via Arduino
-        pwmPublisher3.publish(signal_j3)
-        time.sleep(0.1)
+        #pwmPublisher3.publish(signal_j3)
+        #time.sleep(0.1)
 
         
     nudge = False
@@ -201,15 +202,15 @@ def rotateEE():
         eOld = Calc_PID2[1]
         eTot = Calc_PID2[0]
 
-        signal = Calc_PID2[2]
+        signal_j3 = Calc_PID2[2]
 
-        tX_new = Calc_PID2[3] - signal/1000 #TEMPORARY FOR TESTING
+        tX_new = Calc_PID2[3] - signal_j3/1000 #TEMPORARY FOR TESTING
         e2 = abs(tF-tX_new)
 
-        print("Error: " + str(e2) + " Signal: " + str(signal))
+        print("Error: " + str(e2) + " Signal: " + str(signal_j3))
         #send this to PWM converted representation via Arduino
-        pwmPublisher.publish(signal)
-        time.sleep(0.1)
+        #pwmPublisher3.publish(signal_j3)
+        #time.sleep(0.1)
 
 
     while True:
