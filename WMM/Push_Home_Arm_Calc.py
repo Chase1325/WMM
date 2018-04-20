@@ -75,8 +75,8 @@ def home2Handle_Control(t1_f,t2_f):
     print ("Waiting", secs,"seconds...")
     time.sleep(secs)
     
-    t1_f = -90
-    t1_i = 0 #deg
+    t1_f = 0
+    t1_i = -90 #deg
     t2_i = 90 #deg
     e1 = abs(t1_f-t1_i)
     e2 = abs(t2_f-t2_i)
@@ -98,8 +98,11 @@ def home2Handle_Control(t1_f,t2_f):
     while (e1>=1):
 
         #tX = measured angle
-        tX_new = joint1_queue.pop()
+        tX_new = n.interp(joint1_queue.pop(),[55,255],[-100,100])
+        
         print("Popped from t1 bitches: " + str(tX_new))
+
+
 
         if(t1_f<tX_new):
             dir = 0
