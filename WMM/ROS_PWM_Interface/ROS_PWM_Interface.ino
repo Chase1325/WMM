@@ -16,7 +16,8 @@ const int dirPin3 = 9;
 
 #define ENCODER_A 2
 #define ENCODER_B 3
-volatile int rpmcount = 0
+volatile int rpmcount = 0;
+const int COUNTS_PER_REV = 4225;
 
 // TODO: find the range of motion of the rotational base joint
 const float JOINT1_ANGLE_MIN = 18;
@@ -31,14 +32,16 @@ ros::NodeHandle nh;
 std_msgs::Float32 float_msg1;
 std_msgs::Float32 float_msg2;
 std_msgs::Float32 float_msg3;
+std_msgs::Float32 rpm_msg;
 float angle1, angle2, angle3;
 
 
 // ROS Publishers
 ros::Publisher joint1_theta("joint1_theta", &float_msg1);
 ros::Publisher joint2_theta("joint2_theta", &float_msg2);
-ros::Publisher joint2_theta("joint3_theta", &float_msg3);
+ros::Publisher joint3_theta("joint3_theta", &float_msg3);
 ros::Publisher testing("testing", &float_msg2);
+ros::Publisher rpm_data("rpmcount", &float_msg2);
 
 
 // Callback function when receivng a rostopic for theta1
@@ -91,8 +94,18 @@ float getPotAngle(int potPin) {
 
 
 float getEncoderAngle() {
-  float value = rpmcount % COUNTS_PER_REV;
-  float angle = map(value, 0, COUNTS_PER_REV, 0, 360);
+  //float value = rpmcount % COUNTS_PER_REV;
+  //float angle = map(value, 0, COUNTS_PER_REV, 0, 360);
+  float value, angle;
+  if (rpmcount >= 0) {
+    value = rpmcount % COUNTS_PER_REV;
+    angle = map(value, 0, COUNTS_PER_REV, 0, 360);
+  }
+  else {
+    value = rpmcount % COUNTS_PER_REV;
+    //value = -1*value;
+    angle = map(value, 0, -1*COUNTS_PER_REV, 0, -360); 
+  }
   return angle;
 }
 
@@ -115,7 +128,9 @@ void setup() {
   nh.initNode();
   nh.advertise(joint1_theta);
   nh.advertise(joint2_theta);
+  nh.advertise(joint3_theta);
   nh.advertise(testing);
+  nh.advertise(rpm_data);
   nh.subscribe(pwm);
   //nh.subscribe(pwm_signal2);
   
@@ -131,7 +146,7 @@ void setup() {
   pinMode(pwmPin3, OUTPUT);
   pinMode(dirPin3, OUTPUT);
 
-  attachInterrupt(0, rpm_motor, RISING);
+  attachInterrupt(0, rpm_motor, FALLING);
 }
 
 // Use loop to update the readings of the current motor positions
@@ -152,6 +167,8 @@ void loop() {
   float_msg3.data = angle3;
   joint3_theta.publish( &float_msg3 );
 
+  rpm_msg.data = rpmcount;
+  rpm_data.publish( &rpm_msg );
   
   nh.spinOnce();
   //delay(100);
@@ -159,7 +176,7 @@ void loop() {
 
 
 void rpm_motor(){
-  INTFLAG1 = 1; 
+  //INTFLAG1 = 1; 
   if (digitalRead(ENCODER_A) == HIGH) {
     if (digitalRead(ENCODER_B) == LOW) {
       rpmcount++;
