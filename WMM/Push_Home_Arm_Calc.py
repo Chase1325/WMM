@@ -92,13 +92,20 @@ def home2Handle_Control(t1_f,t2_f):
     eTot=0
     eOld=e1
 
+    dir=0
+
     tX_new = 0
     while (e1>=1):
 
         #tX = measured angle
         tX_new = joint1_queue.pop()
 
-        Calc_PID = C.PID_EE(P,I,D,t1_f,tX_new,eTot,eOld)
+        if(t1_f<tX_new):
+            dir = 0
+        else:
+            dir = 1
+
+        Calc_PID = C.PID_EE(P,I,D,t1_f,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
         
         eOld = Calc_PID[1]
@@ -129,7 +136,12 @@ def home2Handle_Control(t1_f,t2_f):
         #tX = measured angle
         tX_new = joint2_queue.pop()
 
-        Calc_PID = C.PID_EE(P,I,D,t2_f,tX_new,eTot,eOld)
+        if(t2_f<tX_new):
+            dir = 0
+        else:
+            dir = 1
+
+        Calc_PID = C.PID_EE(P,I,D,t2_f,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
         
         eOld = Calc_PID[1]
@@ -177,7 +189,12 @@ def rotateEE():
         #tX = measured angle
         tX_new = joint3_queue.pop()
 
-        Calc_PID = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld)
+        if(tF<tX_new):
+            dir = 0
+        else:
+            dir = 1
+
+        Calc_PID = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
         
         eOld = Calc_PID[1]
@@ -222,7 +239,12 @@ def rotateEE():
         #tX = measured angle
         tX_new = joint3_queue.pop()
 
-        Calc_PID2 = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld)
+        if(tF<tX_new):
+            dir = 0
+        else:
+            dir = 1
+
+        Calc_PID2 = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
         
         eOld = Calc_PID2[1]
