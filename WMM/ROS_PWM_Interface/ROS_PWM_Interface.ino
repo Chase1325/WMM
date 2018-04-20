@@ -33,15 +33,23 @@ std_msgs::Float32 float_msg1;
 std_msgs::Float32 float_msg2;
 std_msgs::Float32 float_msg3;
 std_msgs::Float32 rpm_msg;
+
+std_msgs::Float32 test_msg1;
+std_msgs::Float32 test_msg2;
+std_msgs::Float32 test_msg3;
+
 float angle1, angle2, angle3;
 
 
 // ROS Publishers
 ros::Publisher joint1_theta("joint1_theta", &float_msg1);
 ros::Publisher joint2_theta("joint2_theta", &float_msg2);
-ros::Publisher joint3_theta("joint3_theta", &float_msg3);
-ros::Publisher testing("testing", &float_msg2);
+ros::Publisher joint2_theta("joint3_theta", &float_msg3);
 ros::Publisher rpm_data("rpmcount", &float_msg2);
+
+ros::Publisher testing1("testing1", &test_msg1);
+ros::Publisher testing2("testing2", &test_msg2);
+ros::Publisher testing3("testing3", &test_msg3);
 
 
 // Callback function when receivng a rostopic for theta1
@@ -49,32 +57,31 @@ ros::Publisher rpm_data("rpmcount", &float_msg2);
 void pwmCallback1(const std_msgs::Float32& msg) {
   float pwm = msg.data;
   //pwmWrite(pwmPin1, dirPin1, pwm);
-  //Serial.print("Received: ");
-  //Serial.println(pwm);
-  testing.publish(&msg);
-  //delay(100);
+  testing1.publish(&msg);
 }
 
 // Callback function when receivng a rostopic for theta1
 // Move joint2 (arm elbow motor) to theta2
-/*void pwmCallback2(const std_msgs::Float32& msg) {
+void pwmCallback2(const std_msgs::Float32& msg) {
   float pwm = msg.data;
-  pwmWrite(pwmPin2, dirPin2, pwm);
-}*/
+  //pwmWrite(pwmPin2, dirPin2, pwm);
+  testing2.publish(&msg);
+}
 
 // Callback function when receivng a rostopic for theta1
 // Move joint3 (end effector motor) to theta3
 // TODO" Look into encoder of end effector motor since it doesn't use potentiometer
-/*void pwmCallback3(const std_msgs::Float32& msg) {
+void pwmCallback3(const std_msgs::Float32& msg) {
   float pwm = msg.data;
-  pwmWrite(pwmPin3, dirPin3, pwm);
-}*/
+  //pwmWrite(pwmPin3, dirPin3, pwm);
+  testing3.publish(&msg);
+}
 
 // ROS Subscribers to topics theta 1, 2, and 3
-ros::Subscriber<std_msgs::Float32> pwm("pwm", &pwmCallback1 );
-//ros::Subscriber<std_msgs::Float32> pwm_signal("pwm_signal2", &pwmCallback2 );
-//ros::Subscriber<std_msgs::Int32> state_sub("state", &stateCallback );
-// TODO: create subscriber for end effector desired joint angles (joint 3)
+ros::Subscriber<std_msgs::Float32> pwm1("pwm1", &pwmCallback1 );
+ros::Subscriber<std_msgs::Float32> pwm2("pwm2", &pwmCallback2 );
+ros::Subscriber<std_msgs::Float32> pwm2("pwm3", &pwmCallback3 );
+
 
 // Function to read in potentiometer values from pin and convert to value
 float getPotAngle(int potPin) {
@@ -124,15 +131,17 @@ void pwmWrite(int motorPWM, int motorDIR, float pwm) {
 
 
 void setup() {
-  //Serial.begin(9600);
   nh.initNode();
   nh.advertise(joint1_theta);
   nh.advertise(joint2_theta);
   nh.advertise(joint3_theta);
-  nh.advertise(testing);
   nh.advertise(rpm_data);
-  nh.subscribe(pwm);
-  //nh.subscribe(pwm_signal2);
+  nh.advertise(testing1);
+  nh.advertise(testing2);
+  nh.advertise(testing3);
+  nh.subscribe(pwm1);
+  nh.subscribe(pwm2);
+  nh.subscribe(pwm3);
   
   pinMode(ENCODER_A, INPUT);
   pinMode(ENCODER_B, INPUT);
@@ -169,14 +178,12 @@ void loop() {
 
   rpm_msg.data = rpmcount;
   rpm_data.publish( &rpm_msg );
-  
+
   nh.spinOnce();
-  //delay(100);
 }
 
 
 void rpm_motor(){
-  //INTFLAG1 = 1; 
   if (digitalRead(ENCODER_A) == HIGH) {
     if (digitalRead(ENCODER_B) == LOW) {
       rpmcount++;
