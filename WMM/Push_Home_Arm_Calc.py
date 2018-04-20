@@ -76,6 +76,7 @@ def home2Handle_Control(t1_f,t2_f):
     time.sleep(secs)
     
     t1_f = 0
+    t2_f = 0
     t1_i = -90 #deg
     t2_i = 90 #deg
     e1 = abs(t1_f-t1_i)
