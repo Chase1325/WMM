@@ -7,10 +7,16 @@ const int potPin2 = A2;
 
 // Pins for driver controllers
 // TODO: Change pins for convenient setup
-const int pwmPin1 = 3;
-const int dirPin1 = 4;
-const int pwmPin2 = 5;
-const int dirPin2 = 6;
+const int pwmPin1 = 4;
+const int dirPin1 = 5;
+const int pwmPin2 = 6;
+const int dirPin2 = 7;
+const int pwmPin3 = 8;
+const int dirPin3 = 9;
+
+#define ENCODER_A 2
+#define ENCODER_B 3
+volatile int rpmcount = 0
 
 // TODO: find the range of motion of the rotational base joint
 const float JOINT1_ANGLE_MIN = 18;
@@ -24,10 +30,14 @@ ros::NodeHandle nh;
 
 std_msgs::Float32 float_msg1;
 std_msgs::Float32 float_msg2;
+std_msgs::Float32 float_msg3;
+float angle1, angle2, angle3;
+
 
 // ROS Publishers
 ros::Publisher joint1_theta("joint1_theta", &float_msg1);
 ros::Publisher joint2_theta("joint2_theta", &float_msg2);
+ros::Publisher joint2_theta("joint3_theta", &float_msg3);
 ros::Publisher testing("testing", &float_msg2);
 
 
@@ -79,6 +89,14 @@ float getPotAngle(int potPin) {
   return angle;
 }
 
+
+float getEncoderAngle() {
+  float value = rpmcount % COUNTS_PER_REV;
+  float angle = map(value, 0, COUNTS_PER_REV, 0, 360);
+  return angle;
+}
+
+
 // Function to move motor to desired position/angle
 void pwmWrite(int motorPWM, int motorDIR, float pwm) {
   if (pwm >= 0) {
@@ -93,13 +111,27 @@ void pwmWrite(int motorPWM, int motorDIR, float pwm) {
 
 
 void setup() {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   nh.initNode();
   nh.advertise(joint1_theta);
   nh.advertise(joint2_theta);
   nh.advertise(testing);
   nh.subscribe(pwm);
   //nh.subscribe(pwm_signal2);
+  
+  pinMode(ENCODER_A, INPUT);
+  pinMode(ENCODER_B, INPUT);
+  pinMode(potPin1, INPUT);
+  pinMode(potPin2, INPUT);
+
+  pinMode(pwmPin1, OUTPUT);
+  pinMode(dirPin1, OUTPUT);
+  pinMode(pwmPin2, OUTPUT);
+  pinMode(dirPin2, OUTPUT);
+  pinMode(pwmPin3, OUTPUT);
+  pinMode(dirPin3, OUTPUT);
+
+  attachInterrupt(0, rpm_motor, RISING);
 }
 
 // Use loop to update the readings of the current motor positions
@@ -108,14 +140,37 @@ void setup() {
 void loop() {
 
   // TODO: Need to specify joint1 range of motion for potentiometer
-  float angle1 = getPotAngle(potPin1);
+  angle1 = getPotAngle(potPin1);
   float_msg1.data = angle1;
   joint1_theta.publish( &float_msg1 );
-  Serial.println("Hi");
   
-  /*float angle2 = getPotAngle(potPin2);
+  angle2 = getPotAngle(potPin2);
   float_msg2.data = angle2;
-  joint2_theta.publish( &float_msg2 );*/
+  joint2_theta.publish( &float_msg2 );
+
+  angle3 = getEncoderAngle();
+  float_msg3.data = angle3;
+  joint3_theta.publish( &float_msg3 );
+
+  
   nh.spinOnce();
   //delay(100);
+}
+
+
+void rpm_motor(){
+  INTFLAG1 = 1; 
+  if (digitalRead(ENCODER_A) == HIGH) {
+    if (digitalRead(ENCODER_B) == LOW) {
+      rpmcount++;
+    } else {
+      rpmcount--;
+    }
+  } else {
+    if (digitalRead(ENCODER_B) == LOW) {
+      rpmcount--;
+    } else {
+      rpmcount++;
+    }
+  }
 }
