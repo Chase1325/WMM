@@ -7,6 +7,7 @@ import time
 #import rospy
 #from std_msgs.msg import Float32
 
+#Home - J1 = 245deg->-90, J2 =265deg->90 , J3 = 
 
 L1 = 0.50973
 L2 = 0.44786
@@ -15,7 +16,6 @@ q1 = -(m.pi)/2
 q2 = (m.pi)/2
 
 #t1,t2 = S.symbols('t1 t2')
-
 
 #DH Paremeters: [theta, d, a, alpha]
 dh_param = [[0, height, 0, 0], # Link 0
@@ -54,19 +54,17 @@ def home2Handle_Control(t1_f,t2_f):
     #secs = 3
     #print ("Waiting", secs,"seconds...")
     #time.sleep(secs) 
-    t1_f = -90
-    t1_i = 0 #deg
+    
+    t1_i =-90 #deg
     t2_i = 90 #deg
     e1 = abs(t1_f)-t1_i
     e2 = abs(t2_f-t2_i)
-    #error = n.transpose([e1,e2])
-
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 1
+    P = 5
     I = 0
-    D = 5
+    D = 15
 
     eTot=0
     eOld=e1
@@ -75,18 +73,25 @@ def home2Handle_Control(t1_f,t2_f):
     while (e1>=1):
 
         #tX = measured angle
+        #Map it to our -120 to 120
+        #map(tX,)
 
-        Calc_PID = C.PID_EE(P,I,D,t1_f,tX_new,eTot,eOld)
-        #Returns eTot, eNew, signal, and tX
+        if((t1_f-tX)>0):
+            dir = 0
+        if((t1_f-tX)<=0):
+            dir = 1
+
+        Calc_PID = C.PID_EE(P,I,D,t1_f,tX,eTot,eOld,dir)
+        #Returns eTot, eNew, pwm, and tX
         
         eOld = Calc_PID[1]
         eTot = Calc_PID[0]
 
         signal_j1 = Calc_PID[2]
 
-        tX_new = Calc_PID[3]  + signal_j1/1000 #TEMPORARY FOR TESTING
-        error = abs(t1_f+tX_new)
-        e1 = error
+        #tX_new = CHECK POT VALUE AGAIN
+        e1 = abs(t1_f-tX_new)
+       
 
         print("Error: " + str(error) + " Signal: " + str(signal_j1))
 
@@ -105,6 +110,11 @@ def home2Handle_Control(t1_f,t2_f):
     while (e2>=1):
 
         #tX = measured angle
+        if((t1_f-tX)>0):
+            dir = 0
+        if((t1_f-tX)<=0):
+            dir = 1
+
 
         Calc_PID = C.PID_EE(P,I,D,t2_f,tX_new,eTot,eOld)
         #Returns eTot, eNew, signal, and tX

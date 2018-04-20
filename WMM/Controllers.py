@@ -1,5 +1,6 @@
 #import pypid as pid
 import numpy as n
+import math as m
 
 
 def PD_ARM(t1_f,t2_f,t1_i,t2_i):
@@ -7,21 +8,23 @@ def PD_ARM(t1_f,t2_f,t1_i,t2_i):
     P1 = 0
     D1 = 0
     
-
-
-
-
     #returns both motor outputs
     return m1_out, m2_out
 
-def PID_EE(P,I,D,tF,tX,eTot,eOld):
+def PID_EE(P,I,D,tF,tX,eTot,eOld,dir):
 
-    error = tF-tX
-    eNew = error - eOld
-    #eTot = eTot + error
-    eTot=0
+    eNew = abs(tF-tX)
+    eDelta = eNew - eOld
+    eTot=0#Ignore I term for now
 
     signal = abs((P*error)+(I*eTot)+(D*eNew))
-    
 
-    return eTot, eNew, signal, tX
+    if(signal>1000):
+        signal=1000
+
+    if(dir==0):
+            pwm = map(signal,0,1000,0,-50)
+    if(dir==1):
+            pwm = map(signal,0,1000,0,50)
+
+    return eTot, eNew, pwm, tX
