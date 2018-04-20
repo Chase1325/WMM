@@ -121,7 +121,7 @@ def home2Handle_Control(t1_f,t2_f):
         pwmPublisher1.publish(signal_j1)
         time.sleep(0.1)
 
-        tX_new = joint1_queue.pop() # + signal_j1/1000 #TEMPORARY FOR TESTING
+        tX_new = n.interp(joint1_queue.pop(),[55,255],[-100,100]) # + signal_j1/1000 #TEMPORARY FOR TESTING
         e1 = abs(t1_f-tX_new)
         
         #print("Error: " + str(e1) + " Signal: " + str(signal_j1))
