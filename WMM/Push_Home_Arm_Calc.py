@@ -99,6 +99,7 @@ def home2Handle_Control(t1_f,t2_f):
 
         #tX = measured angle
         tX_new = joint1_queue.pop()
+        print("Popped from t1 bitches: " + str(tX_new))
 
         if(t1_f<tX_new):
             dir = 0
