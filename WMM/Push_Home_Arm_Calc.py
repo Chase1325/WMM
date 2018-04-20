@@ -4,8 +4,9 @@ import numpy as n
 import Kinematics as Kin
 import Controllers as C
 import time
-#import rospy
-#from std_msgs.msg import Float32
+from collections import deque
+import rospy
+from std_msgs.msg import Float32
 
 
 L1 = 0.50973
@@ -22,6 +23,11 @@ dh_param = [[0, height, 0, 0], # Link 0
             [L1, 0, 0, q1], # Link 1
             [L2, 0, 0, q2]]  # Link 2
 
+# LIFO queues to handle incoming joint angle data from the ROS subscribers
+joint1_queue = deque([], maxlen = 5)
+joint2_queue = deque([], maxlen = 5)
+joint3_queue = deque([], maxlen = 5)
+            
 def calcIK():
     t1=0
     t2=0
@@ -44,16 +50,31 @@ def calcIK():
     print('Calculated IK')
     return t1,t2
 
+
+def joint1Callback(msg):
+    joint1_queue.append(msg.data)
+
+def joint2Callback(msg):
+    joint2_queue.append(msg.data)
+
+def joint3Callback(msg):
+    joint3_queue.append(msg.data)
+
+
 #Pass in the required joint angles from inverse kinematics
 def home2Handle_Control(t1_f,t2_f):
     print('Drive Arm to needed position')
 
-    #pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
-    #pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
-    #rospy.init_node('pwmNode', anonymous=True)
-    #secs = 3
-    #print ("Waiting", secs,"seconds...")
-    #time.sleep(secs) 
+    rospy.init_node('pwmNode', anonymous=True)
+    pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
+    pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
+    rospy.Subscriber("joint1_theta", Float32, joint1Callback)
+    rospy.Subscriber("joint2_theta", Float32, joint2Callback)
+    
+    secs = 3
+    print ("Waiting", secs,"seconds...")
+    time.sleep(secs)
+    
     t1_f = -90
     t1_i = 0 #deg
     t2_i = 90 #deg
@@ -75,6 +96,7 @@ def home2Handle_Control(t1_f,t2_f):
     while (e1>=1):
 
         #tX = measured angle
+        tX = joint1_queue.pop()
 
         Calc_PID = C.PID_EE(P,I,D,t1_f,tX_new,eTot,eOld)
         #Returns eTot, eNew, signal, and tX
@@ -91,7 +113,7 @@ def home2Handle_Control(t1_f,t2_f):
         print("Error: " + str(error) + " Signal: " + str(signal_j1))
 
         #send this to PWM converted representation via Arduino
-        #pwmPublisher1.publish(signal_j1)
+        pwmPublisher1.publish(signal_j1)
         time.sleep(0.1)
 
     P = 5
@@ -105,6 +127,7 @@ def home2Handle_Control(t1_f,t2_f):
     while (e2>=1):
 
         #tX = measured angle
+        tX = joint2_queue.pop()
 
         Calc_PID = C.PID_EE(P,I,D,t2_f,tX_new,eTot,eOld)
         #Returns eTot, eNew, signal, and tX
@@ -120,8 +143,8 @@ def home2Handle_Control(t1_f,t2_f):
         print("Error: " + str(error) + " Signal: " + str(signal_j2))
 
         #send this to PWM converted representation via Arduino
-        #pwmPublisher2.publish(signal_j2)
-        #time.sleep(0.1)
+        pwmPublisher2.publish(signal_j2)
+        time.sleep(0.1)
 
 
 
@@ -130,11 +153,13 @@ def home2Handle_Control(t1_f,t2_f):
 def rotateEE():
    
     # Creating a ROS node to publish PWM signals to an Arduino subscriber
-    #pwmPublisher3 = rospy.Publisher('pwm3', Float32, queue_size=1)
-    #rospy.init_node('pwmNode', anonymous=True)
-    #secs = 3
-    #print ("Waiting", secs,"seconds...")
-    #time.sleep(secs)   
+    rospy.init_node('pwmNode', anonymous=True)
+    pwmPublisher3 = rospy.Publisher('pwm3', Float32, queue_size=1)
+    rospy.Subscriber("joint3_theta", Float32, joint3Callback)
+    
+    secs = 3
+    print ("Waiting", secs,"seconds...")
+    time.sleep(secs)   
  
     print('Control EE to open handle')
     tX = 0 #Degrees
@@ -153,6 +178,7 @@ def rotateEE():
     while (error>=1):
 
         #tX = measured angle
+        tX = joint3_queue.pop()
 
         Calc_PID = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld)
         #Returns eTot, eNew, signal, and tX
@@ -168,8 +194,8 @@ def rotateEE():
         print("Error: " + str(error) + " Signal: " + str(signal_j3))
 
         #send this to PWM converted representation via Arduino
-        #pwmPublisher3.publish(signal_j3)
-        #time.sleep(0.1)
+        pwmPublisher3.publish(signal_j3)
+        time.sleep(0.1) # TODO need to change time delay
 
         
     nudge = False
@@ -195,6 +221,7 @@ def rotateEE():
     while (e2>=1):
 
         #tX = measured angle
+        tX = joint3_queue.pop()
 
         Calc_PID2 = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld)
         #Returns eTot, eNew, signal, and tX
@@ -209,8 +236,8 @@ def rotateEE():
 
         print("Error: " + str(e2) + " Signal: " + str(signal_j3))
         #send this to PWM converted representation via Arduino
-        #pwmPublisher3.publish(signal_j3)
-        #time.sleep(0.1)
+        pwmPublisher3.publish(signal_j3)
+        time.sleep(0.1) # TODO need to change time delay
 
 
     while True:
