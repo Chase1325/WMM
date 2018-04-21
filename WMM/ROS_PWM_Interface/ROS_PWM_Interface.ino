@@ -7,12 +7,12 @@ const int potPin2 = A2;
 
 // Pins for driver controllers
 // TODO: Change pins for convenient setup
-const int pwmPin1 = 4;
-const int dirPin1 = 5;
-const int pwmPin2 = 6;
-const int dirPin2 = 7;
-const int pwmPin3 = 8;
-const int dirPin3 = 9;
+const int dirPin1 = 4;
+const int pwmPin1 = 5;
+const int dirPin2 = 6;
+const int pwmPin2 = 7;
+const int dirPin3 = 8;
+const int pwmPin3 = 9;
 
 #define ENCODER_A 2
 #define ENCODER_B 3
