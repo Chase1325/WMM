@@ -44,7 +44,7 @@ float angle1, angle2, angle3;
 // ROS Publishers
 ros::Publisher joint1_theta("joint1_theta", &float_msg1);
 ros::Publisher joint2_theta("joint2_theta", &float_msg2);
-ros::Publisher joint2_theta("joint3_theta", &float_msg3);
+ros::Publisher joint3_theta("joint3_theta", &float_msg3);
 ros::Publisher rpm_data("rpmcount", &float_msg2);
 
 ros::Publisher testing1("testing1", &test_msg1);
@@ -80,7 +80,7 @@ void pwmCallback3(const std_msgs::Float32& msg) {
 // ROS Subscribers to topics theta 1, 2, and 3
 ros::Subscriber<std_msgs::Float32> pwm1("pwm1", &pwmCallback1 );
 ros::Subscriber<std_msgs::Float32> pwm2("pwm2", &pwmCallback2 );
-ros::Subscriber<std_msgs::Float32> pwm2("pwm3", &pwmCallback3 );
+ros::Subscriber<std_msgs::Float32> pwm3("pwm3", &pwmCallback3 );
 
 
 // Function to read in potentiometer values from pin and convert to value
