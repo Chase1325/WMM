@@ -56,16 +56,18 @@ ros::Publisher testing3("testing3", &test_msg3);
 // Move joint1 (rotational arm base) to theta1
 void pwmCallback1(const std_msgs::Float32& msg) {
   float pwm = msg.data;
-  //pwmWrite(pwmPin1, dirPin1, pwm);
+  pwmWrite(pwmPin1, dirPin1, pwm);
   testing1.publish(&msg);
+  //pwmWrite(pwmPin1, dirPin1, 0);
 }
 
 // Callback function when receivng a rostopic for theta1
 // Move joint2 (arm elbow motor) to theta2
 void pwmCallback2(const std_msgs::Float32& msg) {
   float pwm = msg.data;
-  //pwmWrite(pwmPin2, dirPin2, pwm);
+  pwmWrite(pwmPin2, dirPin2, pwm);
   testing2.publish(&msg);
+  //pwmWrite(pwmPin2, dirPin2, 0);
 }
 
 // Callback function when receivng a rostopic for theta1
@@ -73,8 +75,9 @@ void pwmCallback2(const std_msgs::Float32& msg) {
 // TODO" Look into encoder of end effector motor since it doesn't use potentiometer
 void pwmCallback3(const std_msgs::Float32& msg) {
   float pwm = msg.data;
-  //pwmWrite(pwmPin3, dirPin3, pwm);
+  pwmWrite(pwmPin3, dirPin3, pwm);
   testing3.publish(&msg);
+  //pwmWrite(pwmPin3, dirPin3, 0);
 }
 
 // ROS Subscribers to topics theta 1, 2, and 3
