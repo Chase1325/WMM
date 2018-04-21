@@ -75,8 +75,9 @@ def home2Handle_Control(t1_f,t2_f):
     print ("Waiting", secs,"seconds...")
     time.sleep(secs)
     
-    t1_f = -90
-    t1_i = 0 #deg
+    t1_f = 0
+    t2_f = 0
+    t1_i = -90 #deg
     t2_i = 90 #deg
     e1 = abs(t1_f-t1_i)
     e2 = abs(t2_f-t2_i)
@@ -98,7 +99,11 @@ def home2Handle_Control(t1_f,t2_f):
     while (e1>=1):
 
         #tX = measured angle
-        tX_new = joint1_queue.pop()
+        tX_new = n.interp(joint1_queue.pop(),[35,275],[-120,120])
+        
+        print("Popped from t1 bitches: " + str(tX_new))
+
+
 
         if(t1_f<tX_new):
             dir = 0
@@ -117,7 +122,7 @@ def home2Handle_Control(t1_f,t2_f):
         pwmPublisher1.publish(signal_j1)
         time.sleep(0.1)
 
-        tX_new = joint1_queue.pop() # + signal_j1/1000 #TEMPORARY FOR TESTING
+        tX_new = n.interp(joint1_queue.pop(),[35,275],[-120,120]) # + signal_j1/1000 #TEMPORARY FOR TESTING
         e1 = abs(t1_f-tX_new)
         
         #print("Error: " + str(e1) + " Signal: " + str(signal_j1))
@@ -134,7 +139,8 @@ def home2Handle_Control(t1_f,t2_f):
     while (e2>=1):
 
         #tX = measured angle
-        tX_new = joint2_queue.pop()
+        tX_new = n.interp(joint2_queue.pop(),[59,299],[-120,120])
+        print("Joint 2: " + str(tX_new))
 
         if(t2_f<tX_new):
             dir = 0
@@ -153,7 +159,7 @@ def home2Handle_Control(t1_f,t2_f):
         pwmPublisher2.publish(signal_j2)
         time.sleep(0.1)
 
-        tX_new = joint2_queue.pop() #- signal_j2/1000 #TEMPORARY FOR TESTING
+        tX_new = n.interp(joint2_queue.pop(),[59,299],[-120,120]) #- signal_j2/1000 #TEMPORARY FOR TESTING
         e2 = abs(t2_f-tX_new)
         
         #print("Error: " + str(error) + " Signal: " + str(signal_j2))

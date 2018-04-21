@@ -17,14 +17,17 @@ def PID_EE(P,I,D,tF,tX,eTot,eOld,dir):
     eDelta = eNew - eOld
     eTot=0#Ignore I term for now
 
-    signal = abs((P*error)+(I*eTot)+(D*eNew))
+    signal = abs((P*eNew)+(I*eTot)+(D*eDelta))
 
     if(signal>1000):
         signal=1000
 
     if(dir==0):
-            pwm = map(signal,0,1000,0,-50)
+            pwm = n.interp(signal,[0,1000],[0,-50])
     if(dir==1):
-            pwm = map(signal,0,1000,0,50)
+            pwm = n.interp(signal,[0,1000],[0,50])
 
+    
     return eTot, eNew, pwm, tX
+
+
