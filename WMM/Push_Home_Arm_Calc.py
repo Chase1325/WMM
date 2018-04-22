@@ -213,7 +213,7 @@ def rotateEE():
         else:
             dir = 1
 
-        Calc_PID = C.PID_EE2(P,I,D,tF,tX_new,eTot,eOld,dir)
+        Calc_PID = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
         
         eOld = Calc_PID[1]
@@ -264,7 +264,7 @@ def rotateEE():
         else:
             dir = 1
 
-        Calc_PID2 = C.PID_EE2(P,I,D,tF,tX_new,eTot,eOld,dir)
+        Calc_PID2 = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
         
         eOld = Calc_PID2[1]
