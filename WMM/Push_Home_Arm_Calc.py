@@ -10,7 +10,7 @@ from std_msgs.msg import Float32
 
 
 L1 = 0.50973
-L2 = 0.44786
+L2 = 0.4572#0.44786
 height = 0 #Distance from Wheel base to Plane of arm
 q1 = -(m.pi)/2
 q2 = (m.pi)/2
@@ -31,8 +31,8 @@ joint3_queue = deque([], maxlen = 5)
 def calcIK():
     t1=0
     t2=0
-    Hy = 0.9017        #Distance in X to door handle
-    Hx = 0.381      #Distance in Y to door handle
+    Hx = 0.9017-0.0889        #Distance in X to door handle
+    Hy = -0.381      #Distance in Y to door handle
     
     ForwardPos = Kin.RZ(q1)*Kin.trans(0,L1,0)*Kin.RZ(q2)*Kin.trans(0,L2,0)
     print(ForwardPos)
@@ -40,7 +40,7 @@ def calcIK():
     #Need to then Multiply by Translational matricies for EE to Door Handle
     InvPos = Kin.Arm_Inv_Pos_Kin2(ForwardPos,Hx,Hy,L1,L2)
     t1 = n.degrees(InvPos[0])
-    t2 = n.degrees(InvPos[1])
+    t2 = -(n.degrees(InvPos[1]))
 
     ForwardPos2=Kin.RZ(InvPos[0])*Kin.trans(L1,0,0)*Kin.RZ(InvPos[1])*Kin.trans(L2,0,0)
     print("TEST",ForwardPos2)
