@@ -40,7 +40,7 @@ def calcIK():
     #Need to then Multiply by Translational matricies for EE to Door Handle
     InvPos = Kin.Arm_Inv_Pos_Kin2(ForwardPos,Hx,Hy,L1,L2)
     t1 = n.degrees(InvPos[0])
-    t2 = -(n.degrees(InvPos[1]))
+    t2 = n.degrees(InvPos[1])
 
     ForwardPos2=Kin.RZ(InvPos[0])*Kin.trans(L1,0,0)*Kin.RZ(InvPos[1])*Kin.trans(L2,0,0)
     print("TEST",ForwardPos2)
