@@ -133,7 +133,7 @@ def home2Handle_Control(t1_f,t2_f):
     pwmPublisher1.publish(signal_j1)
 
 
-    P = 1.5
+    P = 5
     #I = 0.01
     I=0
     D = 5
