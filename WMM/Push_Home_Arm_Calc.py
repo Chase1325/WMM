@@ -86,7 +86,7 @@ def home2Handle_Control(t1_f,t2_f):
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 6
+    P = 5.5
     I = 0.1
     D = 10
 
@@ -129,21 +129,21 @@ def home2Handle_Control(t1_f,t2_f):
         #print("Error: " + str(e1) + " Signal: " + str(signal_j1))
 
 
-    P = 1
+    P = 0.5
     I = 0.1
-    D = 15
+    D = 10
 
     eTot=0
     eOld=e2
 
     tX_new = 0
-    while (e2>=0.5):
+    while (e2>=3):
 
         #tX = measured angle
         tX_new = n.interp(joint2_queue.pop(),[60,300],[120,-120])
         print("Joint 2: " + str(tX_new))
 
-        if(abs(t2_f-tX_new)<=0.5):
+        if(abs(t2_f-tX_new)<=3):
             break;
 
         if(t2_f<tX_new):
