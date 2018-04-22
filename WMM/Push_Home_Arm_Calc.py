@@ -31,8 +31,8 @@ joint3_queue = deque([], maxlen = 5)
 def calcIK():
     t1=0
     t2=0
-    Hx = 0.9017        #Distance in X to door handle
-    Hy = 0.381      #Distance in Y to door handle
+    Hy = 0.9017        #Distance in X to door handle
+    Hx = 0.381      #Distance in Y to door handle
     
     ForwardPos = Kin.RZ(q1)*Kin.trans(0,L1,0)*Kin.RZ(q2)*Kin.trans(0,L2,0)
     print(ForwardPos)
