@@ -137,7 +137,7 @@ def home2Handle_Control(t1_f,t2_f):
     eOld=e2
 
     tX_new = 0
-    while (e2>=1):
+    while (e2>=0.5):
 
         #tX = measured angle
         tX_new = n.interp(joint2_queue.pop(),[60,300],[120,-120])
