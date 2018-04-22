@@ -129,7 +129,7 @@ def home2Handle_Control(t1_f,t2_f):
         #print("Error: " + str(e1) + " Signal: " + str(signal_j1))
 
 
-    P = 0.05
+    P = 0.25
     I = 0.01
     D = 5
 
@@ -161,7 +161,7 @@ def home2Handle_Control(t1_f,t2_f):
 
         #send this to PWM converted representation via Arduino
         pwmPublisher2.publish(signal_j2)
-        time.sleep(0.1)
+        time.sleep(0.01)
 
         #tX_new = n.interp(joint2_queue.pop(),[59,299],[-120,120]) #- signal_j2/1000 #TEMPORARY FOR TESTING
         #e2 = abs(t2_f-tX_new)
