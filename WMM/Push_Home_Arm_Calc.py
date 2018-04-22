@@ -86,7 +86,7 @@ def home2Handle_Control(t1_f,t2_f):
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 5.5
+    P = 5
     I = 0.1
     D = 10
 
@@ -129,9 +129,9 @@ def home2Handle_Control(t1_f,t2_f):
         #print("Error: " + str(e1) + " Signal: " + str(signal_j1))
 
 
-    P = 0.5
-    I = 0.1
-    D = 10
+    P = 0.05
+    I = 0.01
+    D = 5
 
     eTot=0
     eOld=e2
