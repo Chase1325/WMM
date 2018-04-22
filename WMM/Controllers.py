@@ -48,13 +48,13 @@ def PID_EE2(P,I,D,tF,tX,eTot,eOld,dir):
 
         #t2_f<tX_new=0, else 1
     if(dir==0 and tX<0):
-            pwm = n.interp(signal,[0,1000],[0,30])
+            pwm = n.interp(signal,[0,1000],[15,30])
     if(dir==1 and tX>=0):
-            pwm = n.interp(signal,[0,1000],[0,-30])
+            pwm = n.interp(signal,[0,1000],[-15,-30])
     if(dir==1 and tX<0):
-            pwm = n.interp(signal,[0,1000],[0,-30])
+            pwm = n.interp(signal,[0,1000],[-15,-30])
     if(dir==0 and tX>=0):
-            pwm = n.interp(signal,[0,1000],[0,30])
+            pwm = n.interp(signal,[0,1000],[15,30])
 
     
     return eTot, eNew, pwm, tX
