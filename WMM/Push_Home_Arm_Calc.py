@@ -86,7 +86,7 @@ def home2Handle_Control(t1_f,t2_f):
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 6.5
+    P = 9
     I = 0.1
     D = 10
 
@@ -203,12 +203,12 @@ def rotateEE():
     e3 = abs(tF-tX)
     tX_new = 0
 
-    while (e3>=1):
+    while (e3>=3):
 
         #tX = measured angle
         tX_new = joint3_queue.pop()
 
-        if(abs(tF-tX_new)<=1):
+        if(abs(tF-tX_new)<=3):
             break;
 
         if(tF<tX_new):
@@ -255,12 +255,12 @@ def rotateEE():
     I = 0
     D = 10
 
-    while (e4>=1):
+    while (e4>=3):
 
         #tX = measured angle
         tX_new = joint3_queue.pop()
 
-        if(abs(tF-tX_new)<=1):
+        if(abs(tF-tX_new)<=3):
             break;
 
         if(tF<tX_new):
