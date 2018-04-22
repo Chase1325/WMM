@@ -99,7 +99,7 @@ def home2Handle_Control(t1_f,t2_f):
     while (e1>=1):
 
         #tX = measured angle
-        tX_new = n.interp(joint1_queue.pop(),[35,275],[-120,120])
+        tX_new = n.interp(joint1_queue.pop(),[35,275],[120,-120])
         
         print("Popped from t1 bitches: " + str(tX_new))
         
