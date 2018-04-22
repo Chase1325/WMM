@@ -31,8 +31,8 @@ joint3_queue = deque([], maxlen = 5)
 def calcIK():
     t1=0
     t2=0
-    Hx = L1        #Distance in X to door handle
-    Hy = L2      #Distance in Y to door handle
+    Hx = 0.9017        #Distance in X to door handle
+    Hy = 0.381      #Distance in Y to door handle
     
     ForwardPos = Kin.RZ(q1)*Kin.trans(0,L1,0)*Kin.RZ(q2)*Kin.trans(0,L2,0)
     print(ForwardPos)
@@ -75,8 +75,8 @@ def home2Handle_Control(t1_f,t2_f):
     print ("Waiting", secs,"seconds...")
     time.sleep(secs)
     
-    t1_f = 0
-    t2_f = 0
+    #t1_f = 0
+    #t2_f = 0
     t1_i = -90 #deg
     t2_i = 90 #deg
     e1 = abs(t1_f-t1_i)
@@ -208,6 +208,9 @@ def rotateEE():
         #tX = measured angle
         tX_new = joint3_queue.pop()
 
+        if(abs(tF-tX_new)<=1):
+            break;
+
         if(tF<tX_new):
             dir = 0
         else:
@@ -224,9 +227,7 @@ def rotateEE():
         #send this to PWM converted representation via Arduino
         pwmPublisher3.publish(signal_j3)
         time.sleep(0.1) # TODO need to change time delay
-
-        tX_new = joint3_queue.pop() #+ signal_j3/1000 #TEMPORARY FOR TESTING
-        e3 = abs(tF-tX_new)
+        print("Joint 3 crap: " + str(signal_j3))
 
         #print("Error: " + str(e3) + " Signal: " + str(signal_j3))
 
@@ -237,7 +238,7 @@ def rotateEE():
     nudge = False
     while (nudge == False):
 
-        signal = Calc_PID[2] #Maintain downward position on handle
+        #signal = Calc_PID[2] #Maintain downward position on handle
 
         #Perform forward kinematics to 'nudge'door and prevent it relocking
 
@@ -259,6 +260,9 @@ def rotateEE():
         #tX = measured angle
         tX_new = joint3_queue.pop()
 
+        if(abs(tF-tX_new)<=1):
+            break;
+
         if(tF<tX_new):
             dir = 0
         else:
@@ -275,8 +279,8 @@ def rotateEE():
         pwmPublisher3.publish(signal_j3)
         time.sleep(0.1) # TODO need to change time delay
 
-        tX_new = joint3_queue.pop() #- signal_j3/1000 #TEMPORARY FOR TESTING
-        e4 = abs(tF-tX_new)
+        #tX_new = joint3_queue.pop() #- signal_j3/1000 #TEMPORARY FOR TESTING
+        #e4 = abs(tF-tX_new)
 
         #print("Error: " + str(e4) + " Signal: " + str(signal_j3))
         #send this to PWM converted representation via Arduino
