@@ -22,6 +22,7 @@ def PID_EE(P,I,D,tF,tX,eTot,eOld,dir):
     if(signal>1000):
         signal=1000
 
+        #t2_f<tX_new=0, else 1
     if(dir==0 and tX<0):
             pwm = n.interp(signal,[0,1000],[0,100])
     if(dir==1 and tX>=0):
