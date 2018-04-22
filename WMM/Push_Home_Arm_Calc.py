@@ -86,7 +86,7 @@ def home2Handle_Control(t1_f,t2_f):
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 3
+    P = 5
     I = 0
     D = 10
 
