@@ -15,7 +15,7 @@ def PID_EE(P,I,D,tF,tX,eTot,eOld,dir):
 
     eNew = abs(tF-tX)
     eDelta = eNew - eOld
-    eTot=0#Ignore I term for now
+    eTot=eTot+eNew#Ignore I term for now
 
     signal = abs((P*eNew)+(I*eTot)+(D*eDelta))
 
