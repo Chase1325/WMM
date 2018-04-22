@@ -103,7 +103,7 @@ def home2Handle_Control(t1_f,t2_f):
         
         print("Popped from t1 bitches: " + str(tX_new))
         
-        if((t1_f-tX_new)<=1):
+        if(abs(t1_f-tX_new)<=1):
             break;
 
         if(t1_f<tX_new):
@@ -143,7 +143,7 @@ def home2Handle_Control(t1_f,t2_f):
         tX_new = n.interp(joint2_queue.pop(),[59,299],[120,-120])
         print("Joint 2: " + str(tX_new))
 
-        if((t2_f-tX_new)<=1):
+        if(abs(t2_f-tX_new)<=1):
 
             break;
 
