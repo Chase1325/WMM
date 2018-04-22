@@ -191,7 +191,7 @@ def rotateEE():
  
     print('Control EE to open handle')
     tX = 0 #Degrees
-    tF = -100 #Degrees
+    tF = 100 #Degrees
     
     P = 5
     I = 0
@@ -209,12 +209,13 @@ def rotateEE():
         tX_new = joint3_queue.pop()
 
         if(abs(tF-tX_new)<=3):
+            print('WE TRYING ABOOART')
             break;
 
         if(tF<tX_new):
-            dir = 0
-        else:
             dir = 1
+        else:
+            dir = 0
 
         Calc_PID = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
@@ -264,9 +265,9 @@ def rotateEE():
             break;
 
         if(tF<tX_new):
-            dir = 0
-        else:
             dir = 1
+        else:
+            dir = 0
 
         Calc_PID2 = C.PID_EE(P,I,D,tF,tX_new,eTot,eOld,dir)
         #Returns eTot, eNew, signal, and tX
