@@ -131,7 +131,7 @@ def home2Handle_Control(t1_f,t2_f):
 
     P = 1
     I = 0.1
-    D = 10
+    D = 15
 
     eTot=0
     eOld=e2
@@ -143,8 +143,7 @@ def home2Handle_Control(t1_f,t2_f):
         tX_new = n.interp(joint2_queue.pop(),[60,300],[120,-120])
         print("Joint 2: " + str(tX_new))
 
-        if(abs(t2_f-tX_new)<=1):
-
+        if(abs(t2_f-tX_new)<=0.5):
             break;
 
         if(t2_f<tX_new):
