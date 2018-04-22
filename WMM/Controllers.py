@@ -35,4 +35,27 @@ def PID_EE(P,I,D,tF,tX,eTot,eOld,dir):
     
     return eTot, eNew, pwm, tX
 
+def PID_EE2(P,I,D,tF,tX,eTot,eOld,dir):
+
+    eNew = abs(tF-tX)
+    eDelta = eNew - eOld
+    eTot=eTot+eNew#Ignore I term for now
+
+    signal = abs((P*eNew)+(I*eTot)+(D*eDelta))
+
+    if(signal>1000):
+        signal=1000
+
+        #t2_f<tX_new=0, else 1
+    if(dir==0 and tX<0):
+            pwm = n.interp(signal,[0,1000],[0,40])
+    if(dir==1 and tX>=0):
+            pwm = n.interp(signal,[0,1000],[0,-40])
+    if(dir==1 and tX<0):
+            pwm = n.interp(signal,[0,1000],[0,-40])
+    if(dir==0 and tX>=0):
+            pwm = n.interp(signal,[0,1000],[0,40])
+
+    
+    return eTot, eNew, pwm, tX
 
