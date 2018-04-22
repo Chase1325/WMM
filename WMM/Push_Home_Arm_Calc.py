@@ -86,7 +86,7 @@ def home2Handle_Control(t1_f,t2_f):
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 10
+    P = 12
     I = 0.1
     D = 15
 
@@ -191,9 +191,9 @@ def rotateEE():
  
     print('Control EE to open handle')
     tX = 0 #Degrees
-    tF = 100 #Degrees
+    tF = 120 #Degrees
     
-    P = 15
+    P = 35
     I = 0.1
     D = 15
 
@@ -252,8 +252,8 @@ def rotateEE():
     eOld = e4
     eTot = 0 
 
-    P = 5
-    I = 0
+    P = 30
+    I = 0.5
     D = 10
 
     while (e4>=3):
