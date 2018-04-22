@@ -140,7 +140,7 @@ def home2Handle_Control(t1_f,t2_f):
     while (e2>=1):
 
         #tX = measured angle
-        tX_new = n.interp(joint2_queue.pop(),[59,299],[120,-120])
+        tX_new = n.interp(joint2_queue.pop(),[60,300],[120,-120])
         print("Joint 2: " + str(tX_new))
 
         if(abs(t2_f-tX_new)<=1):
