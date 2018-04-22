@@ -128,9 +128,14 @@ def home2Handle_Control(t1_f,t2_f):
         
         #print("Error: " + str(e1) + " Signal: " + str(signal_j1))
 
+    #Kill Signal
+    signal_j1 = 0
+    pwmPublisher1.publish(signal_j1)
 
-    P = 0.1
-    I = 0.01
+
+    P = 0.5
+    #I = 0.01
+    I=0
     D = 5
 
     eTot=0
@@ -162,6 +167,10 @@ def home2Handle_Control(t1_f,t2_f):
         #send this to PWM converted representation via Arduino
         pwmPublisher2.publish(signal_j2)
         time.sleep(0.01)
+    
+    #Kill Signal 2
+    signal_j2 = 0
+    pwmPublisher2.publish(signal_j2)
 
         #tX_new = n.interp(joint2_queue.pop(),[59,299],[-120,120]) #- signal_j2/1000 #TEMPORARY FOR TESTING
         #e2 = abs(t2_f-tX_new)
@@ -221,7 +230,8 @@ def rotateEE():
 
         #print("Error: " + str(e3) + " Signal: " + str(signal_j3))
 
-        
+    signal_j3 = 0
+    pwmPublisher3.publish(signal_j3)
 
         
     nudge = False
@@ -270,7 +280,9 @@ def rotateEE():
 
         #print("Error: " + str(e4) + " Signal: " + str(signal_j3))
         #send this to PWM converted representation via Arduino
-    
+
+    signal_j3 = 0
+    pwmPublisher3.publish(signal_j3)
 
 
     while True:
