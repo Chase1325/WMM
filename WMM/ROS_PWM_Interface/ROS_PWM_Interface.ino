@@ -128,6 +128,7 @@ void pwmWrite(int motorPWM, int motorDIR, float pwm) {
   else {
     digitalWrite(motorDIR, LOW);
   }
+  pwm = abs(pwm);
   analogWrite(motorPWM, pwm);
   delay(500);
 }
