@@ -36,8 +36,9 @@ def Arm_Inv_Pos_Kin(T,Hx,Hy,Ax,Ay):
 
 def Arm_Inv_Pos_Kin2(T,Hx,Hy,Ax,Ay):
 
-    t2 = m.acos((m.pow(Hx,2)+m.pow(Hy,2)-m.pow(Ax,2)-m.pow(Ay,2))/(2*Ax*Ay))
+    t2 = m.acos((m.pow(Hx,2)+m.pow(Hy,2)+m.pow(Ax,2)-m.pow(Ay,2))/(2*Ax*Ay))
     print(t2)
+
     alpha = m.atan2(Hy,Hx)
     t1 = alpha - m.acos((m.pow(Hx,2)+m.pow(Hy,2)+m.pow(Ax,2)-m.pow(Ay,2))/(2*Ax*m.pow((m.pow(Hx,2)+m.pow(Hy,2)),1/2)))
     print(t1)
