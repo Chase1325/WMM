@@ -86,9 +86,9 @@ def home2Handle_Control(t1_f,t2_f):
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 9
+    P = 10
     I = 0.1
-    D = 10
+    D = 15
 
     eTot=0
     eOld=e1
@@ -193,8 +193,8 @@ def rotateEE():
     tX = 0 #Degrees
     tF = 100 #Degrees
     
-    P = 5
-    I = 0
+    P = 15
+    I = 0.1
     D = 15
 
     eTot=0
