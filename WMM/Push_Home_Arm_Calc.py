@@ -86,7 +86,7 @@ def home2Handle_Control(t1_f,t2_f):
     #Joint Control independently for now:
 
     #Tune for each joint
-    P = 5
+    P = 6.5
     I = 0.1
     D = 10
 
@@ -133,7 +133,7 @@ def home2Handle_Control(t1_f,t2_f):
     pwmPublisher1.publish(signal_j1)
 
 
-    P = 5
+    P = 6.5
     #I = 0.01
     I=0
     D = 5
@@ -227,7 +227,7 @@ def rotateEE():
         #send this to PWM converted representation via Arduino
         pwmPublisher3.publish(signal_j3)
         time.sleep(0.1) # TODO need to change time delay
-        print("Joint 3 crap: " + str(signal_j3))
+        print("Joint 3 crap: " + str(signal_j3) + "angle: " + str(tX_new))
 
         #print("Error: " + str(e3) + " Signal: " + str(signal_j3))
 
