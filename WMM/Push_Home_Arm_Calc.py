@@ -129,7 +129,7 @@ def home2Handle_Control(t1_f,t2_f):
         #print("Error: " + str(e1) + " Signal: " + str(signal_j1))
 
 
-    P = 5
+    P = 1
     I = 0.1
     D = 10
 
