@@ -120,7 +120,7 @@ def home2Handle_Control(t1_f,t2_f):
 
         #send this to PWM converted representation via Arduino
         pwmPublisher1.publish(signal_j1)
-        time.sleep(0.001)
+        #time.sleep(0.001)
 
         tX_new = n.interp(joint1_queue.pop(),[35,275],[-120,120]) # + signal_j1/1000 #TEMPORARY FOR TESTING
         e1 = abs(t1_f-tX_new)
@@ -157,7 +157,7 @@ def home2Handle_Control(t1_f,t2_f):
 
         #send this to PWM converted representation via Arduino
         pwmPublisher2.publish(signal_j2)
-        time.sleep(0.1)
+        #time.sleep(0.001)
 
         tX_new = n.interp(joint2_queue.pop(),[59,299],[-120,120]) #- signal_j2/1000 #TEMPORARY FOR TESTING
         e2 = abs(t2_f-tX_new)
