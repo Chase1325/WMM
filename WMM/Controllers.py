@@ -17,7 +17,7 @@ def PID_EE(P,I,D,tF,tX,eTot,eOld,dir):
     eDelta = eNew - eOld
     eTot=eTot+eNew#Ignore I term for now
 
-    signal = abs((P*eNew)+(I*eTot)/100+(D*eDelta))
+    signal = abs((P*eNew)+(I*eTot)+(D*eDelta))
 
     if(signal>1000):
         signal=1000
