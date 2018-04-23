@@ -191,7 +191,7 @@ def rotateEE():
  
     print('Control EE to open handle')
     tX = 0 #Degrees
-    tF = 120 #Degrees
+    tF = 130 #Degrees
     
     P = 50
     I = 0.1
@@ -212,16 +212,7 @@ def rotateEE():
             print('WE TRYING ABOOART')
             break;
 
-        if(tX_new==100):
-            signal_j1 = 85
-            signal_j2 = 45
-            pwmPublisher1.publish(signal_j1)
-            pwmPublisher2.publish(signal_j2)
-            time.sleep(0.1)
-            signal_j1 = 0
-            signal_j2 = 0
-            pwmPublisher1.publish(signal_j1)
-            pwmPublisher2.publish(signal_j2)
+        
 
         if(tF<tX_new):
             dir = 1
@@ -250,8 +241,16 @@ def rotateEE():
     nudge = False
     while (nudge == False):
 
-        #signal = Calc_PID[2] #Maintain downward position on handle
-
+        
+        signal_j1 = 85
+        signal_j2 = 45
+        pwmPublisher1.publish(signal_j1)
+        pwmPublisher2.publish(signal_j2)
+        time.sleep(1)
+        signal_j1 = 0
+        signal_j2 = 0
+        pwmPublisher1.publish(signal_j1)
+        pwmPublisher2.publish(signal_j2)
         #Perform forward kinematics to 'nudge'door and prevent it relocking
 
         nudge = True
