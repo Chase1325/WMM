@@ -15,12 +15,6 @@ height = 0 #Distance from Wheel base to Plane of arm
 q1 = -(m.pi)/2
 q2 = (m.pi)/2
 
-rospy.init_node('pwmNode', anonymous=True)
-pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
-pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
-rospy.Subscriber("joint1_theta", Float32, joint1Callback)
-rospy.Subscriber("joint2_theta", Float32, joint2Callback)
-
 #t1,t2 = S.symbols('t1 t2')
 
 
@@ -71,7 +65,11 @@ def joint3Callback(msg):
 def home2Handle_Control(t1_f,t2_f):
     print('Drive Arm to needed position')
 
-
+    rospy.init_node('pwmNode', anonymous=True)
+    pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
+    pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
+    rospy.Subscriber("joint1_theta", Float32, joint1Callback)
+    rospy.Subscriber("joint2_theta", Float32, joint2Callback)
     
     secs = 3
     print ("Waiting", secs,"seconds...")
@@ -243,6 +241,11 @@ def rotateEE():
     nudge = False
     while (nudge == False):
 
+        rospy.init_node('pwmNode', anonymous=True)
+        pwmPublisher1 = rospy.Publisher('pwm1', Float32, queue_size=1)
+        pwmPublisher2 = rospy.Publisher('pwm2', Float32, queue_size=1)
+        rospy.Subscriber("joint1_theta", Float32, joint1Callback)
+        rospy.Subscriber("joint2_theta", Float32, joint2Callback)
         
         signal_j1 = 85
         signal_j2 = 45
