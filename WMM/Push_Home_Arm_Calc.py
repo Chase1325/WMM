@@ -251,7 +251,7 @@ def rotateEE():
         signal_j2 = 45
         pwmPublisher1.publish(signal_j1)
         pwmPublisher2.publish(signal_j2)
-        time.sleep(1)
+        time.sleep(3)
         signal_j1 = 0
         signal_j2 = 0
         pwmPublisher1.publish(signal_j1)
