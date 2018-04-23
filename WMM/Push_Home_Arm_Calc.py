@@ -39,8 +39,8 @@ def calcIK():
 
     #Need to then Multiply by Translational matricies for EE to Door Handle
     InvPos = Kin.Arm_Inv_Pos_Kin2(ForwardPos,Hx,Hy,L1,L2)
-    t1 = n.degrees(InvPos[0])
-    t2 = n.degrees(InvPos[1])
+    t1 = n.interp(n.degrees(InvPos[0]),[-120,120],[35,275])
+    t2 = n.interp(n.degrees(InvPos[1]),[120,-120],[60,300])
 
     ForwardPos2=Kin.RZ(InvPos[0])*Kin.trans(L1,0,0)*Kin.RZ(InvPos[1])*Kin.trans(L2,0,0)
     print("TEST",ForwardPos2)
@@ -75,8 +75,8 @@ def home2Handle_Control(t1_f,t2_f):
     print ("Waiting", secs,"seconds...")
     time.sleep(secs)
     
-    #t1_f = 0
-    #t2_f = 0
+    t1_f = n.interp(112,[35,275],[-120,120])
+    t2_f = n.interp(140,[60,300],[120,-120])
     t1_i = -90 #deg
     t2_i = 90 #deg
     e1 = abs(t1_f-t1_i)
@@ -88,7 +88,7 @@ def home2Handle_Control(t1_f,t2_f):
     #Tune for each joint
     P = 12
     I = 0.1
-    D = 15
+    D = 10
 
     eTot=0
     eOld=e1
