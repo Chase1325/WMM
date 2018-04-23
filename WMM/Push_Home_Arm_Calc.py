@@ -191,7 +191,7 @@ def rotateEE():
  
     print('Control EE to open handle')
     tX = 0 #Degrees
-    tF = 135 #Degrees
+    tF = 120 #Degrees
     
     P = 50
     I = 0.1
@@ -211,6 +211,17 @@ def rotateEE():
         if(abs(tF-tX_new)<=3):
             print('WE TRYING ABOOART')
             break;
+
+        if(tX_new==100):
+            signal_j1 = 85
+            signal_j2 = 45
+            pwmPublisher1.publish(signal_j1)
+            pwmPublisher2.publish(signal_j2)
+            time.sleep(0.1)
+            signal_j1 = 0
+            signal_j2 = 0
+            pwmPublisher1.publish(signal_j1)
+            pwmPublisher2.publish(signal_j2)
 
         if(tF<tX_new):
             dir = 1
