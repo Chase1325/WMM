@@ -191,9 +191,9 @@ def rotateEE():
  
     print('Control EE to open handle')
     tX = 0 #Degrees
-    tF = 120 #Degrees
+    tF = 135 #Degrees
     
-    P = 35
+    P = 50
     I = 0.1
     D = 15
 
@@ -252,7 +252,7 @@ def rotateEE():
     eOld = e4
     eTot = 0 
 
-    P = 30
+    P = 50
     I = 0.5
     D = 10
 
