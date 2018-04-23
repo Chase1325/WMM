@@ -247,8 +247,8 @@ def rotateEE():
         rospy.Subscriber("joint1_theta", Float32, joint1Callback)
         rospy.Subscriber("joint2_theta", Float32, joint2Callback)
         
-        signal_j1 = 85
-        signal_j2 = 45
+        signal_j1 = 155
+        signal_j2 = 90
         pwmPublisher1.publish(signal_j1)
         pwmPublisher2.publish(signal_j2)
         time.sleep(3)
