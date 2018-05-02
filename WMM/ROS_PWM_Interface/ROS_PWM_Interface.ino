@@ -1,12 +1,11 @@
 #include <ros.h>
 #include <std_msgs/Float32.h>
 
-// Set up more potentiometers
+// Pins for potentiometers
 const int potPin1 = A1;
 const int potPin2 = A2;
 
-// Pins for driver controllers
-// TODO: Change pins for convenient setup
+// Pins for three motor drivers
 const int dirPin1 = 4;
 const int pwmPin1 = 5;
 const int dirPin2 = 6;
@@ -19,10 +18,8 @@ const int pwmPin3 = 9;
 volatile int rpmcount = 0;
 const int COUNTS_PER_REV = 4225;
 
-// TODO: find the range of motion of the rotational base joint
 const float JOINT1_ANGLE_MIN = 18;
 const float JOINT1_ANGLE_MAX = 280;
-
 const float JOINT2_ANGLE_MIN = 44.6;
 const float JOINT2_ANGLE_MAX = 304.6;
 
@@ -52,35 +49,31 @@ ros::Publisher testing2("testing2", &test_msg2);
 ros::Publisher testing3("testing3", &test_msg3);
 
 
-// Callback function when receivng a rostopic for theta1
-// Move joint1 (rotational arm base) to theta1
+// Callback function when receivng a rostopic for pwm1
+// Write pwm1 to joint1 (rotational arm base)
 void pwmCallback1(const std_msgs::Float32& msg) {
   float pwm = msg.data;
   pwmWrite(pwmPin1, dirPin1, pwm);
   testing1.publish(&msg);
-  //pwmWrite(pwmPin1, dirPin1, 0);
 }
 
-// Callback function when receivng a rostopic for theta1
-// Move joint2 (arm elbow motor) to theta2
+// Callback function when receivng a rostopic for pwm2
+// Write pwm2 to joint2 (arm elbow motor)
 void pwmCallback2(const std_msgs::Float32& msg) {
   float pwm = msg.data;
   pwmWrite(pwmPin2, dirPin2, pwm);
   testing2.publish(&msg);
-  //pwmWrite(pwmPin2, dirPin2, 0);
 }
 
-// Callback function when receivng a rostopic for theta1
-// Move joint3 (end effector motor) to theta3
-// TODO" Look into encoder of end effector motor since it doesn't use potentiometer
+// Callback function when receivng a rostopic for pwm3
+// Write pwm3 to joint3 (end effector motor)
 void pwmCallback3(const std_msgs::Float32& msg) {
   float pwm = msg.data;
   pwmWrite(pwmPin3, dirPin3, pwm);
   testing3.publish(&msg);
-  //pwmWrite(pwmPin3, dirPin3, 0);
 }
 
-// ROS Subscribers to topics theta 1, 2, and 3
+// ROS Subscribers to pwm signal 1, 2, and 3 topics
 ros::Subscriber<std_msgs::Float32> pwm1("pwm1", &pwmCallback1 );
 ros::Subscriber<std_msgs::Float32> pwm2("pwm2", &pwmCallback2 );
 ros::Subscriber<std_msgs::Float32> pwm3("pwm3", &pwmCallback3 );
@@ -91,7 +84,6 @@ float getPotAngle(int potPin) {
   int value;
   float angle;
   value = analogRead(potPin);
-  // TODO: need to check that A1, A2 can be used in if statements
   if (potPin == A1) {
     angle = map(value, 0, 1023, JOINT1_ANGLE_MIN, JOINT1_ANGLE_MAX);
   }
@@ -104,8 +96,6 @@ float getPotAngle(int potPin) {
 
 
 float getEncoderAngle() {
-  //float value = rpmcount % COUNTS_PER_REV;
-  //float angle = map(value, 0, COUNTS_PER_REV, 0, 360);
   float value, angle;
   if (rpmcount >= 0) {
     value = rpmcount % COUNTS_PER_REV;
@@ -113,7 +103,6 @@ float getEncoderAngle() {
   }
   else {
     value = rpmcount % COUNTS_PER_REV;
-    //value = -1*value;
     angle = map(value, 0, -1*COUNTS_PER_REV, 0, -360); 
   }
   return angle;
@@ -130,7 +119,6 @@ void pwmWrite(int motorPWM, int motorDIR, float pwm) {
   }
   pwm = abs(pwm);
   analogWrite(motorPWM, pwm);
-  //delay(500);
 }
 
 
@@ -167,7 +155,6 @@ void setup() {
 // utilize arm kinematics to compute desired angles/positions.
 void loop() {
 
-  // TODO: Need to specify joint1 range of motion for potentiometer
   angle1 = getPotAngle(potPin1);
   float_msg1.data = angle1;
   joint1_theta.publish( &float_msg1 );
