@@ -101,7 +101,7 @@ def home2Handle_Control(t1_f,t2_f):
         #tX = measured angle
         tX_new = n.interp(joint1_queue.pop(),[35,275],[-120,120])
         
-        print("Popped from t1 bitches: " + str(tX_new))
+        print("Popped from t1: " + str(tX_new))
         
         if(abs(t1_f-tX_new)<=1):
             break;
@@ -209,7 +209,7 @@ def rotateEE():
         tX_new = joint3_queue.pop()
 
         if(abs(tF-tX_new)<=3):
-            print('WE TRYING ABOOART')
+            print('Abort')
             break;
 
         
@@ -230,7 +230,7 @@ def rotateEE():
         #send this to PWM converted representation via Arduino
         pwmPublisher3.publish(signal_j3)
         time.sleep(0.1) # TODO need to change time delay
-        print("Joint 3 crap: " + str(signal_j3) + "angle: " + str(tX_new))
+        print("Joint 3: " + str(signal_j3) + "angle: " + str(tX_new))
 
         #print("Error: " + str(e3) + " Signal: " + str(signal_j3))
 
